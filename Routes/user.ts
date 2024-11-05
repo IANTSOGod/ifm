@@ -41,6 +41,7 @@ router.post("/api/auth", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erreur du serveur", error });
   }
 });
+
 router.post("/api/create", async (req: Request, res: Response) => {
   const Req = req.body;
 
@@ -84,11 +85,7 @@ router.post("/api/modify/:id", async (req: Request, res: Response) => {
   try {
     const selectedUser = await User.findOne({ where: { user_id: userId } });
     if (selectedUser) {
-      if (
-        Req.username != null &&
-        Req.CIN != null &&
-        Req.num_phone != Req.num_phone
-      ) {
+      if (Req.username != null && Req.CIN != null && Req.num_phone != null) {
         selectedUser.username = Req.username;
         selectedUser.num_phone = Req.num_phone;
         selectedUser.CIN = Req.CIN;
