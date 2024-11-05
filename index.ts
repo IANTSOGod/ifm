@@ -3,6 +3,7 @@ import "reflect-metadata";
 import express from "express";
 import cors from "cors";
 import UserRoutes from "./Routes/user";
+import MailRoutes from "./Routes/email";
 import sequelize from "./Config/database";
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(
   })
 );
 app.use(UserRoutes);
+app.use(MailRoutes);
 
 sequelize
   .authenticate()
