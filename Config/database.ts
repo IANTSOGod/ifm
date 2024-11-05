@@ -2,11 +2,11 @@ import { Sequelize } from "sequelize-typescript";
 import { User } from "../Models/user";
 
 const sequelize = new Sequelize({
-  database: "ifm",
-  username: "nouvel_utilisateur",
-  password: "mot_de_passe",
+  database: "sql8742838",
+  username: "sql8742838",
+  password: "VSaSsDLGzh",
   dialect: "mysql",
-  host: "localhost",
+  host: "sql8.freesqldatabase.com",
   models: [User],
 });
 
