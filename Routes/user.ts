@@ -78,4 +78,29 @@ router.delete("/api/:id", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/api/modify/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  const Req = req.body;
+  try {
+    const selectedUser = await User.findOne({ where: { user_id: userId } });
+    if (selectedUser) {
+      if (
+        Req.username != null &&
+        Req.CIN != null &&
+        Req.num_phone != Req.num_phone
+      ) {
+        selectedUser.username = Req.username;
+        selectedUser.num_phone = Req.num_phone;
+        selectedUser.CIN = Req.CIN;
+      }
+      await selectedUser.save();
+      res.status(200).json({ message: "Les modifications on réussi" });
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 export default router;
