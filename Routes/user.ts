@@ -100,4 +100,61 @@ router.post("/api/modify/:id", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/api/GetPassword/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const response = await User.findOne({ where: { user_id: userId } });
+    if (response) {
+      res.status(200).json({ password: response.mdp });
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/api/GetUsername/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const response = await User.findOne({ where: { user_id: userId } });
+    if (response) {
+      res.status(200).json({ username: response.username });
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/api/GetCIN/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const response = await User.findOne({ where: { user_id: userId } });
+    if (response) {
+      res.status(200).json({ CIN: response.CIN });
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+router.post("/api/GetNum/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const response = await User.findOne({ where: { user_id: userId } });
+    if (response) {
+      res.status(200).json({ num_phone: response.num_phone });
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 export default router;
