@@ -1,18 +1,12 @@
 import nodemailer from "nodemailer";
 
 interface Email {
-  source: string;
   destination: string;
   subject: string;
   text: string;
 }
 
-export default async function sendEmail({
-  source,
-  destination,
-  subject,
-  text,
-}: Email) {
+export default async function sendEmail({ destination, subject, text }: Email) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
 
@@ -24,7 +18,6 @@ export default async function sendEmail({
   });
 
   const mailOptions = {
-    from: source,
     to: destination,
     subject: subject,
     text: text,
