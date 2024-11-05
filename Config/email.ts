@@ -18,8 +18,8 @@ export default async function sendEmail({
 
     //Mila ovaina le pass fa tsy mety mahazo mot de passe application za
     auth: {
-      user: "iantsochristianrazafindrazaka@gmail.com",
-      pass: "hhhhhh321",
+      user: "briceprivat292@gmail.com",
+      pass: "amge ozcj ogfc zese",
     },
   });
 
