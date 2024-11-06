@@ -3,16 +3,16 @@ import { User } from "../Models/user";
 
 const router = Router();
 
-router.get("/api/", async (req: Request, res: Response) => {
+router.get("/list", async (req: Request, res: Response) => {
   try {
     const users = await User.findAll();
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: error as string });
+    res.status(500).json(error);
   }
 });
 
-router.post("/api/auth", async (req: Request, res: Response) => {
+router.post("/auth", async (req: Request, res: Response) => {
   const Req = req.body;
 
   try {
@@ -42,7 +42,7 @@ router.post("/api/auth", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/api/create", async (req: Request, res: Response) => {
+router.post("/create", async (req: Request, res: Response) => {
   const Req = req.body;
 
   try {
@@ -64,7 +64,7 @@ router.post("/api/create", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/api/:id", async (req: Request, res: Response) => {
+router.delete("/delete/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id, 10);
 
   try {
@@ -79,16 +79,22 @@ router.delete("/api/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/api/modify/:id", async (req: Request, res: Response) => {
+router.post("/modify/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id, 10);
   const Req = req.body;
   try {
     const selectedUser = await User.findOne({ where: { user_id: userId } });
     if (selectedUser) {
-      if (Req.username != null && Req.CIN != null && Req.num_phone != null) {
+      if (
+        Req.username != null &&
+        Req.CIN != null &&
+        Req.num_phone != null &&
+        Req.email != null
+      ) {
         selectedUser.username = Req.username;
         selectedUser.num_phone = Req.num_phone;
         selectedUser.CIN = Req.CIN;
+        selectedUser.email=Req.email;
       }
       await selectedUser.save();
       res.status(200).json({ message: "Les modifications on réussi" });
@@ -100,7 +106,7 @@ router.post("/api/modify/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/api/GetPassword/:id", async (req: Request, res: Response) => {
+router.post("/GetPassword/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id, 10);
   try {
     const response = await User.findOne({ where: { user_id: userId } });
@@ -114,7 +120,7 @@ router.post("/api/GetPassword/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/api/GetUsername/:id", async (req: Request, res: Response) => {
+router.post("/GetUsername/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id, 10);
   try {
     const response = await User.findOne({ where: { user_id: userId } });
@@ -128,7 +134,7 @@ router.post("/api/GetUsername/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/api/GetCIN/:id", async (req: Request, res: Response) => {
+router.post("/GetCIN/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id, 10);
   try {
     const response = await User.findOne({ where: { user_id: userId } });
@@ -142,13 +148,27 @@ router.post("/api/GetCIN/:id", async (req: Request, res: Response) => {
   }
 });
 
-
-router.post("/api/GetNum/:id", async (req: Request, res: Response) => {
+router.post("/GetNum/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id, 10);
   try {
     const response = await User.findOne({ where: { user_id: userId } });
     if (response) {
       res.status(200).json({ num_phone: response.num_phone });
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+router.post("/GetEmail/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const response = await User.findOne({ where: { user_id: userId } });
+    if (response) {
+      res.status(200).json({ email: response.email });
     } else {
       res.status(404).json({ message: "Utilisateur non trouvé" });
     }

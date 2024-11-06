@@ -17,8 +17,8 @@ app.use(
     allowedHeaders: ["Content-Type"],
   })
 );
-app.use(UserRoutes);
-app.use(MailRoutes);
+app.use("/api/users/", UserRoutes);
+app.use("/api/email", MailRoutes);
 
 sequelize
   .authenticate()

@@ -37,4 +37,9 @@ export class User extends Model<User> {
     allowNull: true,
   })
   CIN?: string; 
+  @Column({
+    type: DataType.STRING(30),
+    allowNull: true,
+  })
+  email?: string; 
 }
