@@ -102,7 +102,7 @@ router.delete("/delete/:id", async (req: Request, res: Response) => {
       res.status(404).json({ message: "Utilisateur non trouvé" });
     }
   } catch (error) {
-    res.status(500).json({ message: error as string });
+    res.status(500).json(error);
   }
 });
 

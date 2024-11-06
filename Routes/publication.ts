@@ -102,6 +102,20 @@ router.post("/search", async (req: Request, res: Response) => {
   }
 });
 
+router.delete("/delete/:id",async (req:Request,res:Response)=>{
+  const pubId=parseInt(req.params.id,10);
+  try {
+    const destroyCount=await Publication.destroy({where:{pub_id:pubId}})
+    if(destroyCount>0){
+      res.status(200).json({message:"La publication a été supprimé"}) 
+    }else{
+      res.status(404).json({message:"Cette publication n'existe pas"})
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+})
+
 router.post("/Create", async (req: Request, res: Response) => {
   const currentDate = new Date();
 
