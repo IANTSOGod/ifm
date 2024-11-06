@@ -1,5 +1,7 @@
 import { Router, Response, Request } from "express";
 import { Publication } from "../Models/publication";
+import { Op } from "sequelize";
+import { User } from "../Models/user";
 const router = Router();
 
 router.get("/list", async (res: Response) => {
@@ -26,6 +28,51 @@ router.post("/Find/:id", async (req: Request, res: Response) => {
     }
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+router.post("/search", async (req: Request, res: Response) => {
+  const searchTerm = req.body.search; // Récupère le terme de recherche depuis la requête
+  console.log(searchTerm);
+
+  try {
+//tina atao 
+//SELECT *  FROM `publication`  LEFT JOIN `user`    ON `publication`.`user_id` = `user`.`user_id`  WHERE `publication`.`titre` LIKE '%iantso%'     OR `publication`.`description` LIKE '%iantso%'     OR `user`.`username` LIKE '%iantso%';
+
+    ///Amboarina 
+    // if (searchTerm) {
+    //   // Recherche des publications avec un LEFT JOIN sur l'utilisateur
+    //   const publications = await Publication.findAll({
+    //     where: {
+    //       [Op.or]: [
+    //         { titre: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans le titre
+    //         { description: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans la description
+    //       ],
+    //     },
+    //     include: [
+    //       {
+    //         model: User,
+    //         required: false, // Utilisation de LEFT JOIN
+    //         where: {
+    //           [Op.or]: [
+    //             { username: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans le username de l'utilisateur
+    //           ],
+    //         },
+    //         attributes: ["username"], // Seul le champ `username` est récupéré de la table `user`
+    //       },
+    //     ],
+    //   });
+
+    //   // Si des publications sont trouvées, les renvoyer
+    //   if (publications.length > 0) {
+    //     res.status(200).json(publications);
+    //   } else {
+    //     res.status(404).json({ message: "Aucune publication trouvée" });
+    //   }
+    // } else {
+    //   res.status(400).json({ message: "Le champ de recherche est requis" });
+    // }
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
   }
 });
 

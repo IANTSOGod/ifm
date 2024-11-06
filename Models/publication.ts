@@ -4,6 +4,7 @@ import {
   Model,
   DataType,
   ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { User } from "./user";
 
@@ -50,4 +51,7 @@ export class Publication extends Model<Publication> {
     allowNull: false,
   })
   zone?: string;
+
+  @BelongsTo(() => User)
+  user!: User;
 }
