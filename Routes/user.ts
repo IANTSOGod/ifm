@@ -94,7 +94,7 @@ router.post("/modify/:id", async (req: Request, res: Response) => {
         selectedUser.username = Req.username;
         selectedUser.num_phone = Req.num_phone;
         selectedUser.CIN = Req.CIN;
-        selectedUser.email=Req.email;
+        selectedUser.email = Req.email;
       }
       await selectedUser.save();
       res.status(200).json({ message: "Les modifications on réussi" });
@@ -162,13 +162,26 @@ router.post("/GetNum/:id", async (req: Request, res: Response) => {
   }
 });
 
-
 router.post("/GetEmail/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id, 10);
   try {
     const response = await User.findOne({ where: { user_id: userId } });
     if (response) {
       res.status(200).json({ email: response.email });
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/Find/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const response = await User.findOne({ where: { user_id: userId } });
+    if (response) {
+      res.status(200).json(response);
     } else {
       res.status(404).json({ message: "Utilisateur non trouvé" });
     }
