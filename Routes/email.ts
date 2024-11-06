@@ -23,8 +23,8 @@ router.post("/getUserPassword/:id", async (req: Request, res: Response) => {
     if (user) {
       sendEmail({
         destination: user.email as string,
-        subject: "Récupération de mot de passe",
-        text: `Voici votre mot de passe ${user.mdp}`,
+        subject: `Récupération du mot de passe`,
+        text: `Le mot de passe de ${user.username} dans anonymat est ${user.mdp}`,
       });
       res
         .status(200)
