@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import UserRoutes from "./Routes/user";
 import MailRoutes from "./Routes/email";
+import FactsRoutes from "./Routes/facts";
 import sequelize from "./Config/database";
 
 const app = express();
@@ -19,7 +20,7 @@ app.use(
 );
 app.use("/api/users/", UserRoutes);
 app.use("/api/email", MailRoutes);
-
+app.use("/api/facts", FactsRoutes);
 sequelize
   .authenticate()
   .then(() => {
