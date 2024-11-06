@@ -21,14 +21,18 @@ router.post("/getUserPassword/:id", async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ where: { user_id: userId } });
     if (user) {
-      sendEmail({
-        destination: user.email as string,
-        subject: `Récupération du mot de passe`,
-        text: `Le mot de passe de ${user.username} dans anonymat est ${user.mdp}`,
-      });
-      res
-        .status(200)
-        .json({ message: "Votre mot de passe a été envoyé par email" });
+      if (user.email != null) {
+        sendEmail({
+          destination: user.email as string,
+          subject: `Récupération du mot de passe`,
+          text: `Le mot de passe de ${user.username} dans anonymat est ${user.mdp}`,
+        });
+        res
+          .status(200)
+          .json({ message: "Votre mot de passe a été envoyé par email" });
+      } else {
+        res.status(404).json({ message: "Cet utilisateur n'a pas d'email" });
+      }
     } else {
       res.status(404).json({ message: "Utilisateur non trouvé" });
     }
