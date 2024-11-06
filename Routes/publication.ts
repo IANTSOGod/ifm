@@ -1,10 +1,10 @@
 import { Router, Response, Request } from "express";
-import { Facts } from "../Models/facts";
+import { Publication } from "../Models/publication";
 const router = Router();
 
 router.get("/list", async (res: Response) => {
   try {
-    const response = await Facts.findAll();
+    const response = await Publication.findAll();
     if (response) {
       res.status(200).json(response);
     } else {
@@ -18,7 +18,7 @@ router.get("/list", async (res: Response) => {
 router.post("/Find/:id", async (req: Request, res: Response) => {
   const factId = parseInt(req.params.id, 10);
   try {
-    const response = await Facts.findOne({ where: { fact_id: factId } });
+    const response = await Publication.findOne({ where: { pub_id: factId } });
     if (response) {
       res.status(200).json(response);
     } else {
@@ -32,22 +32,21 @@ router.post("/Find/:id", async (req: Request, res: Response) => {
 router.post("/Create", async (req: Request, res: Response) => {
   const currentDate = new Date();
 
-  const formattedDate = currentDate.toLocaleString("fr-MG", {
-    hour12: false,
-    timeZone: "Indian/Antananarivo",
-  });
-
-  console.log(formattedDate);
-
   const Req = req.body;
   try {
-    if (Req.libelle != null && Req.user_id != null && Req.zone != null) {
-      const newFacts = await Facts.create({
-        libelle: Req.libelle,
-        id_user: Req.user_id,
-        fact_date: new Date(formattedDate),
+    if (
+      Req.titre != null &&
+      Req.description != null &&
+      Req.zone != null &&
+      Req.user_id != null
+    ) {
+      const newFacts = await Publication.create({
+        titre: Req.titre,
+        user_id: Req.user_id,
+        description: Req.description,
+        date: currentDate,
         zone: Req.zone,
-      } as Facts);
+      } as Publication);
       res.status(200).json({ message: "Fait créé" });
     } else {
       res.status(202).json({ message: "Champ vide impossible de creer" });

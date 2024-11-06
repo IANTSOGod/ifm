@@ -85,17 +85,13 @@ router.post("/modify/:id", async (req: Request, res: Response) => {
   try {
     const selectedUser = await User.findOne({ where: { user_id: userId } });
     if (selectedUser) {
-      if (
-        Req.username != null &&
-        Req.CIN != null &&
-        Req.num_phone != null &&
-        Req.email != null
-      ) {
-        selectedUser.username = Req.username;
-        selectedUser.num_phone = Req.num_phone;
-        selectedUser.CIN = Req.CIN;
-        selectedUser.email = Req.email;
-      }
+      selectedUser.CIN = Req.CIN != null ? Req.CIN : selectedUser.CIN;
+      selectedUser.email = Req.email != null ? Req.email : selectedUser.email;
+      selectedUser.num_phone =
+        Req.num_phone != null ? Req.num_phone : selectedUser.num_phone;
+      selectedUser.username =
+        Req.username != null ? Req.username : selectedUser.username;
+      selectedUser.mdp = Req.mdp != null ? Req.mdp : selectedUser.mdp;
       await selectedUser.save();
       res.status(200).json({ message: "Les modifications on réussi" });
     } else {

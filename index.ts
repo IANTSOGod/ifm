@@ -4,7 +4,7 @@ import express from "express";
 import cors from "cors";
 import UserRoutes from "./Routes/user";
 import MailRoutes from "./Routes/email";
-import FactsRoutes from "./Routes/facts";
+import PubRoutes from "./Routes/publication";
 import ImageRoutes from "./Routes/image";
 import sequelize from "./Config/database";
 
@@ -19,9 +19,9 @@ app.use(
     allowedHeaders: ["Content-Type"],
   })
 );
-app.use("/api/users/", UserRoutes);
+app.use("/api/users", UserRoutes);
 app.use("/api/email", MailRoutes);
-app.use("/api/facts", FactsRoutes);
+app.use("/api/pub", PubRoutes);
 app.use("/api/image", ImageRoutes);
 sequelize
   .authenticate()

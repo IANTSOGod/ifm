@@ -1,10 +1,16 @@
-import { Table, Column, Model, DataType} from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+} from "sequelize-typescript";
+import { Publication } from "./publication";
 
 @Table({
   tableName: "image",
   timestamps: false,
 })
-
 export class Image extends Model<Image> {
   @Column({
     type: DataType.INTEGER,
@@ -20,9 +26,10 @@ export class Image extends Model<Image> {
   })
   image!: Buffer;
 
+  @ForeignKey(() => Publication)
   @Column({
-    type: DataType.STRING(255),
-    allowNull: true,
+    type: DataType.NUMBER,
+    allowNull: false,
   })
-  libelle?: string;
+  pub_id?: number;
 }

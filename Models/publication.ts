@@ -6,46 +6,44 @@ import {
   ForeignKey,
 } from "sequelize-typescript";
 import { User } from "./user";
-import { Image } from "./image";
 
 @Table({
-  tableName: "facts",
+  tableName: "publication",
   timestamps: false,
 })
-export class Facts extends Model<Facts> {
+export class Publication extends Model<Publication> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   })
-  fact_id!: number;
+  pub_id!: number;
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  id_user!: number;
+  user_id!: number;
 
   @Column({
-    type: DataType.STRING(255),
-    allowNull: true,
+    type: DataType.STRING(30),
+    allowNull: false,
   })
-  libelle?: string;
+  titre?: string;
+
+  @Column({
+    type: DataType.STRING(30),
+    allowNull: false,
+  })
+  description?: string;
 
   @Column({
     type: DataType.DATE,
-    allowNull: true,
+    allowNull: false,
   })
-  fact_date!: Date;
-
-  @ForeignKey(() => Image)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: true,
-  })
-  image_id?: number;
+  date!: Date;
 
   @Column({
     type: DataType.STRING(255),
