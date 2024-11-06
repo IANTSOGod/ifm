@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { User } from "../Models/user";
 import assureUserUnique from "../Config/username.splitter";
+import { Op } from "sequelize";
 
 const router = Router();
 
@@ -8,6 +9,23 @@ router.get("/list", async (req: Request, res: Response) => {
   try {
     const users = await User.findAll();
     res.json(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/search", async (req: Request, res: Response) => {
+  const Req = req.body;
+  const searchTerm = Req.search;
+  try {
+    const users = await User.findAll({
+      where: { username: { [Op.like]: `%${searchTerm}%` } },
+    });
+    if (users.length > 0) {
+      res.status(200).json(users);
+    } else {
+      res.status(404).json({ message: "Aucun utilisateur correspondant" });
+    }
   } catch (error) {
     res.status(500).json(error);
   }

@@ -42,7 +42,7 @@ router.post("/search", async (req: Request, res: Response) => {
       const publications = await Publication.findAll({
         where: {
           [Op.or]: [
-            { titre: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans le titre
+            { titre: { [Op.like]: `%${searchTerm}%` } }, 
             { description: { [Op.like]: `%${searchTerm}%` } },
           ],
         },
