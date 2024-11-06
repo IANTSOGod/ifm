@@ -36,8 +36,7 @@ export class Facts extends Model<Facts> {
 
   @Column({
     type: DataType.DATE,
-    defaultValue: DataType.NOW,
-    allowNull: false,
+    allowNull: true,
   })
   fact_date!: Date;
 
@@ -47,4 +46,10 @@ export class Facts extends Model<Facts> {
     allowNull: true,
   })
   image_id?: number;
+
+  @Column({
+    type: DataType.STRING(255),
+    allowNull: false,
+  })
+  zone?: string;
 }

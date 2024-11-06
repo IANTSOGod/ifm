@@ -29,4 +29,32 @@ router.post("/Find/:id", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/Create", async (req: Request, res: Response) => {
+  const currentDate = new Date();
+
+  const formattedDate = currentDate.toLocaleString("fr-MG", {
+    hour12: false,
+    timeZone: "Indian/Antananarivo",
+  });
+
+  console.log(formattedDate);
+
+  const Req = req.body;
+  try {
+    if (Req.libelle != null && Req.user_id != null && Req.zone != null) {
+      const newFacts = await Facts.create({
+        libelle: Req.libelle,
+        id_user: Req.user_id,
+        fact_date: new Date(formattedDate),
+        zone: Req.zone,
+      } as Facts);
+      res.status(200).json({ message: "Fait créé" });
+    } else {
+      res.status(202).json({ message: "Champ vide impossible de creer" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 export default router;
