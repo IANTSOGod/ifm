@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { User } from "../Models/user";
+import assureUserUnique from "../Config/username.splitter";
 
 const router = Router();
 
@@ -44,12 +45,20 @@ router.post("/auth", async (req: Request, res: Response) => {
 
 router.post("/create", async (req: Request, res: Response) => {
   const Req = req.body;
-
+  var usr = Req.username;
+  const MDP = Req.mdp;
   try {
-    if (Req.username && Req.mdp) {
+    if (usr && MDP) {
+      var search = await User.findOne({ where: { username: usr } });
+
+      while (search) {
+        usr = assureUserUnique(usr);
+        search = await User.findOne({ where: { username: usr } });
+      }
+
       const newUser = await User.create({
-        username: Req.username,
-        mdp: Req.mdp,
+        username: usr,
+        mdp: MDP,
       } as User);
 
       res.status(201).json(newUser);

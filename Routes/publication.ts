@@ -31,46 +31,72 @@ router.post("/Find/:id", async (req: Request, res: Response) => {
   }
 });
 router.post("/search", async (req: Request, res: Response) => {
-  const searchTerm = req.body.search; // Récupère le terme de recherche depuis la requête
+  const searchTerm = req.body.search;
   console.log(searchTerm);
 
   try {
-//tina atao 
-//SELECT *  FROM `publication`  LEFT JOIN `user`    ON `publication`.`user_id` = `user`.`user_id`  WHERE `publication`.`titre` LIKE '%iantso%'     OR `publication`.`description` LIKE '%iantso%'     OR `user`.`username` LIKE '%iantso%';
+    //tina atao
+    //SELECT *  FROM `publication`  LEFT JOIN `user`    ON `publication`.`user_id` = `user`.`user_id`  WHERE `publication`.`titre` LIKE '%iantso%'     OR `publication`.`description` LIKE '%iantso%'     OR `user`.`username` LIKE '%iantso%';
 
-    ///Amboarina 
-    // if (searchTerm) {
-    //   // Recherche des publications avec un LEFT JOIN sur l'utilisateur
-    //   const publications = await Publication.findAll({
-    //     where: {
-    //       [Op.or]: [
-    //         { titre: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans le titre
-    //         { description: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans la description
-    //       ],
-    //     },
-    //     include: [
-    //       {
-    //         model: User,
-    //         required: false, // Utilisation de LEFT JOIN
-    //         where: {
-    //           [Op.or]: [
-    //             { username: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans le username de l'utilisateur
-    //           ],
-    //         },
-    //         attributes: ["username"], // Seul le champ `username` est récupéré de la table `user`
-    //       },
-    //     ],
-    //   });
+    if (searchTerm) {
+      const publications = await Publication.findAll({
+        where: {
+          [Op.or]: [
+            { titre: { [Op.like]: `%${searchTerm}%` } }, // Recherche dans le titre
+            { description: { [Op.like]: `%${searchTerm}%` } },
+          ],
+        },
+        include: [
+          {
+            model: User,
+            required: false,
+            attributes: ["username"],
+          },
+        ],
+      });
 
-    //   // Si des publications sont trouvées, les renvoyer
-    //   if (publications.length > 0) {
-    //     res.status(200).json(publications);
-    //   } else {
-    //     res.status(404).json({ message: "Aucune publication trouvée" });
-    //   }
-    // } else {
-    //   res.status(400).json({ message: "Le champ de recherche est requis" });
-    // }
+      if (publications.length > 0) {
+        console.log("ty le nandefa kai");
+        res.status(200).json(publications);
+      } else {
+        try {
+          const response = await User.findOne({
+            where: { username: { [Op.like]: `%${searchTerm}%` } },
+          });
+          if (response) {
+            const selectedId = response?.user_id;
+            const resp = await Publication.findAll({
+              where: {
+                user_id: selectedId,
+              },
+              include: [
+                {
+                  model: User,
+                  required: false,
+                  attributes: ["username"],
+                },
+              ],
+            });
+            if (resp.length > 0) {
+              console.log("tafiditra ato");
+              res.status(200).json(resp);
+            } else {
+              res
+                .status(404)
+                .json({ message: "Aucune publication correspondante" });
+            }
+          } else {
+            res
+              .status(404)
+              .json({ message: "Aucune publication correspondante" });
+          }
+        } catch (error) {
+          res.status(500).json(error);
+        }
+      }
+    } else {
+      res.status(400).json({ message: "Le champ de recherche est requis" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error });
   }
@@ -80,6 +106,7 @@ router.post("/Create", async (req: Request, res: Response) => {
   const currentDate = new Date();
 
   const Req = req.body;
+  console.log(Req.titre + Req.description + Req.zone + Req.user_id);
   try {
     if (
       Req.titre != null &&
