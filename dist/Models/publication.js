@@ -9,9 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Publication = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-let User = class User extends sequelize_typescript_1.Model {
+const user_1 = require("./user");
+let Publication = class Publication extends sequelize_typescript_1.Model {
 };
 __decorate([
     (0, sequelize_typescript_1.Column)({
@@ -21,47 +22,51 @@ __decorate([
         allowNull: false,
     }),
     __metadata("design:type", Number)
-], User.prototype, "user_id", void 0);
+], Publication.prototype, "pub_id", void 0);
+__decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => user_1.User),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        allowNull: false,
+    }),
+    __metadata("design:type", Number)
+], Publication.prototype, "user_id", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(30),
         allowNull: false,
-        unique: true
     }),
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], Publication.prototype, "titre", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(30),
         allowNull: false,
     }),
     __metadata("design:type", String)
-], User.prototype, "mdp", void 0);
+], Publication.prototype, "description", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING(10),
-        allowNull: true,
+        type: sequelize_typescript_1.DataType.DATE,
+        allowNull: false,
     }),
-    __metadata("design:type", String)
-], User.prototype, "num_phone", void 0);
+    __metadata("design:type", Date)
+], Publication.prototype, "date", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING(30),
-        allowNull: true,
+        type: sequelize_typescript_1.DataType.STRING(255),
+        allowNull: false,
     }),
     __metadata("design:type", String)
-], User.prototype, "CIN", void 0);
+], Publication.prototype, "zone", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING(30),
-        allowNull: true,
-    }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-User = __decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => user_1.User),
+    __metadata("design:type", user_1.User)
+], Publication.prototype, "user", void 0);
+Publication = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: "user",
+        tableName: "publication",
         timestamps: false,
     })
-], User);
-exports.User = User;
+], Publication);
+exports.Publication = Publication;

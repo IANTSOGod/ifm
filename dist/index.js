@@ -8,6 +8,8 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const user_1 = __importDefault(require("./Routes/user"));
 const email_1 = __importDefault(require("./Routes/email"));
+const publication_1 = __importDefault(require("./Routes/publication"));
+const image_1 = __importDefault(require("./Routes/image"));
 const database_1 = __importDefault(require("./Config/database"));
 const app = (0, express_1.default)();
 const PORT = 3000;
@@ -17,8 +19,10 @@ app.use((0, cors_1.default)({
     methods: ["GET", "POST", "DELETE"],
     allowedHeaders: ["Content-Type"],
 }));
-app.use(user_1.default);
-app.use(email_1.default);
+app.use("/api/users", user_1.default);
+app.use("/api/email", email_1.default);
+app.use("/api/pub", publication_1.default);
+app.use("/api/image", image_1.default);
 database_1.default
     .authenticate()
     .then(() => {

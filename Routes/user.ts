@@ -14,6 +14,23 @@ router.get("/list", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/findByusr", async (req: Request, res: Response) => {
+  const Req = req.body;
+  const searchTerm = Req.search;
+  try {
+    const users = await User.findAll({
+      where: { username: { [Op.like]: `%${searchTerm}%` } },
+    });
+    if (users.length > 0) {
+      res.status(200).json(users);
+    } else {
+      res.status(404).json({ message: "Aucun utilisateur trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/search", async (req: Request, res: Response) => {
   const Req = req.body;
   const searchTerm = Req.search;
@@ -57,7 +74,7 @@ router.post("/auth", async (req: Request, res: Response) => {
       res.status(404).json({ message: "Utilisateur non trouvé" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Erreur du serveur", error });
+    res.status(500).json({ error });
   }
 });
 
@@ -74,12 +91,15 @@ router.post("/create", async (req: Request, res: Response) => {
         search = await User.findOne({ where: { username: usr } });
       }
 
-      const newUser = await User.create({
+      await User.create({
         username: usr,
         mdp: MDP,
       } as User);
-
-      res.status(201).json(newUser);
+      if (Req.username === usr) {
+        res.status(201).json({ message: "Utilisateur crée" });
+      } else {
+        res.status(201).json({ message: `Utilisateur ${usr} crée` });
+      }
     } else {
       res
         .status(400)
@@ -116,9 +136,21 @@ router.post("/modify/:id", async (req: Request, res: Response) => {
       selectedUser.email = Req.email != null ? Req.email : selectedUser.email;
       selectedUser.num_phone =
         Req.num_phone != null ? Req.num_phone : selectedUser.num_phone;
-      selectedUser.username =
-        Req.username != null ? Req.username : selectedUser.username;
       selectedUser.mdp = Req.mdp != null ? Req.mdp : selectedUser.mdp;
+      if (Req.username != null) {
+        var usr = Req.username;
+
+        var search = await User.findOne({ where: { username: usr } });
+
+        while (search) {
+          usr = assureUserUnique(usr);
+          search = await User.findOne({ where: { username: usr } });
+        }
+        selectedUser.username = usr;
+      } else {
+        selectedUser.username = selectedUser.username;
+      }
+
       await selectedUser.save();
       res.status(200).json({ message: "Les modifications on réussi" });
     } else {
