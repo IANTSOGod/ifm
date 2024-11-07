@@ -35,26 +35,31 @@ router.post("/auth", async (req: Request, res: Response) => {
   const Req = req.body;
 
   try {
-    const users = await User.findAll({
-      where: { username: Req.username },
-    });
-
-    if (users.length > 0) {
-      const usersWithValidPassword = users.filter(
-        (user) => user.mdp === Req.mdp
-      );
-
-      if (usersWithValidPassword.length === 1) {
-        res.status(200).json(usersWithValidPassword[0]);
-      } else if (usersWithValidPassword.length > 1) {
-        res.status(409).json({
-          message: "Plusieurs utilisateurs avec le même mot de passe trouvés",
-        });
+    if(Req.query!=null){
+      const users = await User.findAll({
+        where: { username: Req.query },
+      });
+  
+      if (users.length > 0) {
+        const usersWithValidPassword = users.filter(
+          (user) => user.mdp === Req.mdp
+        );
+  
+        if (usersWithValidPassword.length === 1) {
+          res.status(200).json(usersWithValidPassword[0]);
+        } else if (usersWithValidPassword.length > 1) {
+          res.status(409).json({
+            message: "Plusieurs utilisateurs avec le même mot de passe trouvés",
+          });
+        } else {
+          res.status(401).json({ message: "Mot de passe incorrect" });
+        }
       } else {
-        res.status(401).json({ message: "Mot de passe incorrect" });
+        const users=await User.findAll({
+          where:{email:Req.query}
+        })
+        res.status(404).json({ message: "Utilisateur non trouvé" });
       }
-    } else {
-      res.status(404).json({ message: "Utilisateur non trouvé" });
     }
   } catch (error) {
     res.status(500).json({ error });
