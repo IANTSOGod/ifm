@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/list", async (req: Request, res: Response) => {
   try {
-    const response = await Publication.findAll({
+    var response = await Publication.findAll({
       include: [
         {
           model: Image,
@@ -23,7 +23,7 @@ router.get("/list", async (req: Request, res: Response) => {
         {
           model: Reaction,
           required: false,
-          attributes: ["type"],
+          attributes: ["type", "user_id"],
         },
       ],
     });
@@ -80,6 +80,16 @@ router.post("/search", async (req: Request, res: Response) => {
             required: false,
             attributes: ["username"],
           },
+          {
+            model: Image,
+            required: false,
+            attributes: ["image", "image_id"],
+          },
+          {
+            model: Reaction,
+            required: false,
+            attributes: ["type", "user_id"],
+          },
         ],
       });
 
@@ -102,6 +112,16 @@ router.post("/search", async (req: Request, res: Response) => {
                   model: User,
                   required: false,
                   attributes: ["username"],
+                },
+                {
+                  model: Image,
+                  required: false,
+                  attributes: ["image", "image_id"],
+                },
+                {
+                  model: Reaction,
+                  required: false,
+                  attributes: ["type", "user_id"],
                 },
               ],
             });
