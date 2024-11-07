@@ -4,6 +4,7 @@ import {
   Model,
   DataType,
   ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { Publication } from "./publication";
 
@@ -21,10 +22,10 @@ export class Image extends Model<Image> {
   image_id!: number;
 
   @Column({
-    type: DataType.BLOB,
+    type: DataType.STRING(255),
     allowNull: false,
   })
-  image!: Buffer;
+  image!: string;
 
   @ForeignKey(() => Publication)
   @Column({
@@ -32,4 +33,7 @@ export class Image extends Model<Image> {
     allowNull: false,
   })
   pub_id?: number;
+
+  @BelongsTo(() => Publication)
+  publication!: Publication;
 }

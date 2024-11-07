@@ -6,11 +6,14 @@ import UserRoutes from "./Routes/user";
 import MailRoutes from "./Routes/email";
 import PubRoutes from "./Routes/publication";
 import ImageRoutes from "./Routes/image";
+import ReactPath from "./Routes/reaction";
 import sequelize from "./Config/database";
+import path from "path";
 
 const app = express();
 const PORT = 3000;
 
+app.use("/Images", express.static(path.join(__dirname, "Images")));
 app.use(express.json());
 app.use(
   cors({
@@ -23,6 +26,7 @@ app.use("/api/users", UserRoutes);
 app.use("/api/email", MailRoutes);
 app.use("/api/pub", PubRoutes);
 app.use("/api/image", ImageRoutes);
+app.use("/api/react", ReactPath);
 sequelize
   .authenticate()
   .then(() => {

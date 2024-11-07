@@ -2,11 +2,32 @@ import { Router, Response, Request } from "express";
 import { Publication } from "../Models/publication";
 import { Op } from "sequelize";
 import { User } from "../Models/user";
+import { Image } from "../Models/image";
+import { Reaction } from "../Models/reaction";
 const router = Router();
 
-router.get("/list", async (res: Response) => {
+router.get("/list", async (req: Request, res: Response) => {
   try {
-    const response = await Publication.findAll();
+    const response = await Publication.findAll({
+      include: [
+        {
+          model: Image,
+          required: false,
+          attributes: ["image_id", "image"],
+        },
+        {
+          model: User,
+          required: false,
+          attributes: ["username"],
+        },
+        {
+          model: Reaction,
+          required: false,
+          attributes: ["type"],
+        },
+      ],
+    });
+
     if (response) {
       res.status(200).json(response);
     } else {
@@ -20,7 +41,14 @@ router.get("/list", async (res: Response) => {
 router.post("/Find/:id", async (req: Request, res: Response) => {
   const factId = parseInt(req.params.id, 10);
   try {
-    const response = await Publication.findOne({ where: { pub_id: factId } });
+    const response = await Publication.findOne({
+      where: { pub_id: factId },
+      include: {
+        model: User,
+        required: false,
+        attributes: ["username"],
+      },
+    });
     if (response) {
       res.status(200).json(response);
     } else {

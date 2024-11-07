@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize-typescript";
 import { User } from "../Models/user";
 import { Image } from "../Models/image";
 import { Publication } from "../Models/publication";
+import { Reaction } from "../Models/reaction";
 
 //Sync en ligne
 /*{
@@ -20,7 +21,7 @@ const sequelize = new Sequelize({
   password: "mot_de_passe",
   dialect: "mysql",
   host: "localhost",
-  models: [User, Image, Publication],
+  models: [User, Image, Publication,Reaction],
 });
 
 export default sequelize;
