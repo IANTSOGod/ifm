@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { User } from "../Models/user";
 import assureUserUnique from "../Config/username.splitter";
 import { Op } from "sequelize";
+import Rnd from "../Config/randomize";
 
 const router = Router();
 
@@ -67,6 +68,32 @@ router.post("/auth", async (req: Request, res: Response) => {
     }
   } catch (error) {
     res.status(500).json({ error });
+  }
+});
+
+router.post("/authByGoogle", async (req: Request, res: Response) => {
+  const Req = req.body;
+  try {
+    if (Req.email != null) {
+      const user = await User.findOne({
+        where: {
+          email: Req.email,
+        },
+      });
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        const str = Rnd(8);
+        const usr = await User.create({
+          email: Req.email,
+          mdp: str,
+          username: Req.name,
+        } as User);
+        res.status(200).json(usr);
+      }
+    }
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 

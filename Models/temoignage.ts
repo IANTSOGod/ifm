@@ -29,8 +29,8 @@ export class Temoignage extends Model<Temoignage> {
   corps!: string;
 
   @Column({
-    type: DataType.NOW,
-    allowNull: false,
+    type: DataType.DATE,
+    allowNull: true,
   })
   date!: Date;
   @ForeignKey(() => User)

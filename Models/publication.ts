@@ -46,7 +46,7 @@ export class Publication extends Model<Publication> {
 
   @Column({
     type: DataType.DATE,
-    allowNull: false,
+    allowNull: true,
   })
   date!: Date;
 

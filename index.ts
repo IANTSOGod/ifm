@@ -7,6 +7,7 @@ import MailRoutes from "./Routes/email";
 import PubRoutes from "./Routes/publication";
 import ImageRoutes from "./Routes/image";
 import ReactPath from "./Routes/reaction";
+import TemoignagePath from "./Routes/temoignages";
 import sequelize from "./Config/database";
 import path from "path";
 
@@ -27,6 +28,7 @@ app.use("/api/email", MailRoutes);
 app.use("/api/pub", PubRoutes);
 app.use("/api/image", ImageRoutes);
 app.use("/api/react", ReactPath);
+app.use("/api/tem", TemoignagePath);
 sequelize
   .authenticate()
   .then(() => {

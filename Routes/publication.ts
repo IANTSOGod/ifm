@@ -207,8 +207,6 @@ router.delete("/delete/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/create", async (req: Request, res: Response) => {
-  const currentDate = new Date();
-
   const Req = req.body;
   console.log(Req.titre + Req.description + Req.zone + Req.user_id);
   try {
@@ -222,7 +220,6 @@ router.post("/create", async (req: Request, res: Response) => {
         titre: Req.titre,
         user_id: Req.user_id,
         description: Req.description,
-        date: currentDate,
         zone: Req.zone,
       } as Publication);
       res.status(200).json({ message: "Fait créé" });
