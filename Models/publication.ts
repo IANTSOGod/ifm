@@ -10,6 +10,7 @@ import {
 import { User } from "./user";
 import { Image } from "./image";
 import { Reaction } from "./reaction";
+import { Temoignage } from "./temoignage";
 
 @Table({
   tableName: "publication",
@@ -61,4 +62,6 @@ export class Publication extends Model<Publication> {
   images!: Image[];
   @HasMany(() => Reaction)
   reaction!: Reaction;
+  @HasMany(() => Temoignage)
+  temoignage!: Temoignage;
 }

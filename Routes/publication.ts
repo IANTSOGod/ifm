@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import { User } from "../Models/user";
 import { Image } from "../Models/image";
 import { Reaction } from "../Models/reaction";
+import { Temoignage } from "../Models/temoignage";
 const router = Router();
 
 router.get("/list", async (req: Request, res: Response) => {
@@ -24,6 +25,19 @@ router.get("/list", async (req: Request, res: Response) => {
           model: Reaction,
           required: false,
           attributes: ["type", "user_id"],
+        },
+        {
+          model: Temoignage,
+          required: false,
+          attributes: ["corps", "date", "user_id"],
+          include: [
+            {
+              model: User,
+              as: "user", // Assurez-vous que l'alias est correctement configuré dans le modèle Temoignage
+              required: false,
+              attributes: ["username"], // Les attributs que vous souhaitez inclure de l'utilisateur
+            },
+          ],
         },
       ],
     });
@@ -90,6 +104,19 @@ router.post("/search", async (req: Request, res: Response) => {
             required: false,
             attributes: ["type", "user_id"],
           },
+          {
+            model: Temoignage,
+            required: false,
+            attributes: ["corps", "date", "user_id"],
+            include: [
+              {
+                model: User,
+                as: "user", // Assurez-vous que l'alias est correctement configuré dans le modèle Temoignage
+                required: false,
+                attributes: ["username"], // Les attributs que vous souhaitez inclure de l'utilisateur
+              },
+            ],
+          },
         ],
       });
 
@@ -122,6 +149,19 @@ router.post("/search", async (req: Request, res: Response) => {
                   model: Reaction,
                   required: false,
                   attributes: ["type", "user_id"],
+                },
+                {
+                  model: Temoignage,
+                  required: false,
+                  attributes: ["corps", "date", "user_id"],
+                  include: [
+                    {
+                      model: User,
+                      as: "user", // Assurez-vous que l'alias est correctement configuré dans le modèle Temoignage
+                      required: false,
+                      attributes: ["username"], // Les attributs que vous souhaitez inclure de l'utilisateur
+                    },
+                  ],
                 },
               ],
             });
