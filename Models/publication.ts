@@ -6,11 +6,13 @@ import {
   ForeignKey,
   BelongsTo,
   HasMany,
+  HasOne,
 } from "sequelize-typescript";
 import { User } from "./user";
 import { Image } from "./image";
 import { Reaction } from "./reaction";
 import { Temoignage } from "./temoignage";
+import { Notification } from "./notification";
 
 @Table({
   tableName: "publication",
@@ -45,6 +47,12 @@ export class Publication extends Model<Publication> {
   description?: string;
 
   @Column({
+    type: DataType.STRING(50),
+    allowNull: false,
+  })
+  entreprise?: string;
+
+  @Column({
     type: DataType.DATE,
     allowNull: true,
   })
@@ -64,4 +72,6 @@ export class Publication extends Model<Publication> {
   reaction!: Reaction;
   @HasMany(() => Temoignage)
   temoignage!: Temoignage;
+  @HasOne(() => Notification)
+  notification!: Notification;
 }

@@ -1,10 +1,17 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from "sequelize-typescript";
 import { User } from "./user";
 import { Notification } from "./notification";
 
 @Table({
-  tableName: "reaction", 
-  timestamps: false, 
+  tableName: "lecture",
+  timestamps: false,
 })
 export class Lecture extends Model<Lecture> {
   @Column({
@@ -15,14 +22,14 @@ export class Lecture extends Model<Lecture> {
   })
   lect_id!: number;
 
-  @ForeignKey(()=>User)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.NUMBER,
     allowNull: false,
   })
   user_id!: number;
 
-  @ForeignKey(()=>Notification)
+  @ForeignKey(() => Notification)
   @Column({
     type: DataType.NUMBER,
     allowNull: false,

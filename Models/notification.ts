@@ -1,10 +1,19 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+  HasMany,
+} from "sequelize-typescript";
 import { User } from "./user";
 import { Publication } from "./publication";
+import { Lecture } from "./lecture";
 
 @Table({
-  tableName: "reaction", 
-  timestamps: false, 
+  tableName: "notification",
+  timestamps: false,
 })
 export class Notification extends Model<Notification> {
   @Column({
@@ -15,14 +24,14 @@ export class Notification extends Model<Notification> {
   })
   notif_id!: number;
 
-  @ForeignKey(()=>User)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.NUMBER,
     allowNull: false,
   })
   user_id!: number;
 
-  @ForeignKey(()=>Publication)
+  @ForeignKey(() => Publication)
   @Column({
     type: DataType.NUMBER,
     allowNull: false,
@@ -33,4 +42,6 @@ export class Notification extends Model<Notification> {
   user!: User;
   @BelongsTo(() => Publication)
   pub!: Publication;
+  @HasMany(() => Lecture)
+  lecture!: Lecture;
 }

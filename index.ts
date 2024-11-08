@@ -8,6 +8,7 @@ import PubRoutes from "./Routes/publication";
 import ImageRoutes from "./Routes/image";
 import ReactPath from "./Routes/reaction";
 import TemoignagePath from "./Routes/temoignages";
+import NotifPath from "./Routes/notif";
 import sequelize from "./Config/database";
 import path from "path";
 
@@ -29,6 +30,7 @@ app.use("/api/pub", PubRoutes);
 app.use("/api/image", ImageRoutes);
 app.use("/api/react", ReactPath);
 app.use("/api/tem", TemoignagePath);
+app.use("/api/notif", NotifPath);
 sequelize
   .authenticate()
   .then(() => {

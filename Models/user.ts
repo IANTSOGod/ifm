@@ -1,5 +1,6 @@
-import { Table, Column, Model, DataType } from "sequelize-typescript";
-
+import { Table, Column, Model, DataType, HasMany } from "sequelize-typescript";
+import { Notification } from "./notification";
+import { Lecture } from "./lecture";
 @Table({
   tableName: "user", 
   timestamps: false, 
@@ -41,4 +42,8 @@ export class User extends Model<User> {
     allowNull: true,
   })
   email?: string; 
+  @HasMany (()=> Notification)
+  notification!:Notification;
+  @HasMany(()=>Lecture)
+  lecture!:Lecture
 }

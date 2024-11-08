@@ -11,3 +11,8 @@ export default function Rnd(length: number): string {
 
   return result;
 }
+
+// const resultat = publications.filter((publi) => {
+//   publi.notification.user_id != publi.user_id;
+// });
+
