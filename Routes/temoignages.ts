@@ -11,7 +11,7 @@ router.post("/create", async (req: Request, res: Response) => {
         user_id: parseInt(Req.user_id, 10),
         corps: Req.corps,
       } as Temoignage);
-      res.status(200).json({ message: "créé" });
+      res.status(200).json({ message: "bien reçu" });
     } else {
       res.status(400).json({ message: "Champ incomplet" });
     }

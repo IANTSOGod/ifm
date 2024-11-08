@@ -4,6 +4,7 @@ import { Image } from "../Models/image";
 import { Publication } from "../Models/publication";
 import { Reaction } from "../Models/reaction";
 import { Temoignage } from "../Models/temoignage";
+import { Notification } from "../Models/notification";
 
 //Sync en ligne
 /*{
@@ -22,7 +23,7 @@ const sequelize = new Sequelize({
   password: "mot_de_passe",
   dialect: "mysql",
   host: "localhost",
-  models: [User, Image, Publication, Reaction, Temoignage],
+  models: [User, Image, Publication, Reaction, Temoignage,Notification],
 });
 
 export default sequelize;
