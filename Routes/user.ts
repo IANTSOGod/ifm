@@ -3,6 +3,7 @@ import { User } from "../Models/user";
 import assureUserUnique from "../Config/username.splitter";
 import { Op } from "sequelize";
 import Rnd from "../Config/randomize";
+import sendEmail from "../Config/email";
 
 const router = Router();
 
@@ -56,18 +57,45 @@ router.post("/auth", async (req: Request, res: Response) => {
           res.status(401).json({ message: "Mot de passe incorrect" });
         }
       } else {
-        const us = await User.findAll({
-          where: { email: Req.query },
+        const us = await User.findOne({
+          where: {
+            [Op.and]: [{ email: Req.query }, { verif: { [Op.ne]: 0 } }],
+          },
         });
-        if (us.length > 0) {
+        if (us) {
           res.status(200).json(us);
         } else {
-          res.status(404).json({ message: "Utilisateur non trouvé" });
+          const use = await User.findOne({
+            where: {
+              [Op.and]: [{ email: Req.query }, { verif: 0 }],
+            },
+          });
+          if (use) {
+            res.status(500).json({ message: "Veuillez verifier votre email" });
+          } else {
+            res.status(500).json({ message: "Aucun utilisateur correpondant" });
+          }
         }
       }
     }
   } catch (error) {
     res.status(500).json({ error });
+  }
+});
+
+router.get("/confirm/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const user = await User.findOne({ where: { user_id: userId } });
+    if (user) {
+      user.verif = true;
+      await user.save();
+      res.status(200).json({ message: "Utilisateur confirmé" });
+    } else {
+      res.status(202).json({ message: "Utilisateur non existant" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 
@@ -117,15 +145,22 @@ router.post("/create", async (req: Request, res: Response) => {
       if (Req.username === usr) {
         res.status(201).json({ message: "Utilisateur crée" });
       } else {
-        res.status(201).json({ message: `Utilisateur ${usr} crée` });
+        res.status(202).json({ message: `Utilisateur ${usr} crée` });
       }
     } else {
       if (Req.email != null) {
-        await User.create({
+        const userCreated = await User.create({
           email: Req.email,
           mdp: MDP,
         } as User);
-        res.status(200).json({ message: "Utilisateur créé" });
+        sendEmail({
+          destination: Req.email as string,
+          subject: "Veuillez confirmer votre email",
+          text: `http://192.168.1.152:3000/api/users/confirm/${userCreated.user_id}`,
+        });
+        res
+          .status(201)
+          .send("Bienvenue dans anonymat, votre email a été confirmé");
       } else {
         res.status(202).json({ message: "Champ incomplet" });
       }

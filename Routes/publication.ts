@@ -76,16 +76,42 @@ router.get("/list", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/Find/:id", async (req: Request, res: Response) => {
-  const factId = parseInt(req.params.id, 10);
+router.post("/Find/", async (req: Request, res: Response) => {
+  const Req=req.body;
+  const factId=Req.pub_id
   try {
     const response = await Publication.findOne({
       where: { pub_id: factId },
-      include: {
-        model: User,
-        required: false,
-        attributes: ["username"],
-      },
+      include: [
+        {
+          model: User,
+          required: false,
+          attributes: ["username"],
+        },
+        {
+          model: Image,
+          required: false,
+          attributes: ["image", "image_id"],
+        },
+        {
+          model: Reaction,
+          required: false,
+          attributes: ["type", "user_id"],
+        },
+        {
+          model: Temoignage,
+          required: false,
+          attributes: ["corps", "date", "user_id"],
+          include: [
+            {
+              model: User,
+              as: "user", // Assurez-vous que l'alias est correctement configuré dans le modèle Temoignage
+              required: false,
+              attributes: ["username"], // Les attributs que vous souhaitez inclure de l'utilisateur
+            },
+          ],
+        }
+      ]
     });
     if (response) {
       res.status(200).json(response);

@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, HasMany } from "sequelize-typescript";
+import { Table, Column, Model, DataType, HasMany, AllowNull } from "sequelize-typescript";
 import { Notification } from "./notification";
 import { Lecture } from "./lecture";
 @Table({
@@ -42,6 +42,13 @@ export class User extends Model<User> {
     allowNull: true,
   })
   email?: string; 
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: true,
+  })
+  verif!: boolean;
+  
   @HasMany (()=> Notification)
   notification!:Notification;
   @HasMany(()=>Lecture)

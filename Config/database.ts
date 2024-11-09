@@ -20,10 +20,10 @@ import { Lecture } from "../Models/lecture";
 
 const sequelize = new Sequelize({
   database: "ifm",
-  username: "nouvel_utilisateur",
-  password: "mot_de_passe",
-  dialect: "mysql",
-  host: "localhost",
+  username: "iantso",
+  password: "Ds0jZZTcPtDjWsO5urcSBp3mG8oo6MeX",
+  dialect: "postgres",
+  host: "postgresql://iantso:Ds0jZZTcPtDjWsO5urcSBp3mG8oo6MeX@dpg-csnimuogph6c73bf9060-a/ifm",
   models: [
     User,
     Image,
