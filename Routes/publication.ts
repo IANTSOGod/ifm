@@ -358,13 +358,12 @@ router.post("/search", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/delete/:id", async (req: Request, res: Response) => {
-  const pubId = parseInt(req.params.id, 10);
+router.post("/delete/", async (req: Request, res: Response) => {
+  const pubId = req.body.pub_id;
   try {
     const Notifs = await Notification.findOne({
       where: { pub_id: pubId },
     });
-    await Lecture.destroy({ where: { notif_id: Notifs?.notif_id } });
     Notifs?.destroy();
     await Image.destroy({ where: { pub_id: pubId } });
     await Reaction.destroy({ where: { pub_id: pubId } });
@@ -409,7 +408,7 @@ router.post(
           if (req.file != undefined) {
             await Image.create({
               pub_id: pub.pub_id,
-              image: `https://192.168.1.152:3000/Images/${req.file.filename}`,
+              image: `http://192.168.1.152:3000/Images/${req.file.filename}`,
             } as Image);
           }
         } else {
