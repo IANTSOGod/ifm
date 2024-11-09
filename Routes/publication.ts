@@ -77,8 +77,8 @@ router.get("/list", async (req: Request, res: Response) => {
 });
 
 router.post("/Find/", async (req: Request, res: Response) => {
-  const Req=req.body;
-  const factId=Req.pub_id
+  const Req = req.body;
+  const factId = Req.pub_id;
   try {
     const response = await Publication.findOne({
       where: { pub_id: factId },
@@ -110,8 +110,8 @@ router.post("/Find/", async (req: Request, res: Response) => {
               attributes: ["username"], // Les attributs que vous souhaitez inclure de l'utilisateur
             },
           ],
-        }
-      ]
+        },
+      ],
     });
     if (response) {
       res.status(200).json(response);
@@ -434,7 +434,7 @@ router.post(
           if (req.file != undefined) {
             await Image.create({
               pub_id: pub.pub_id,
-              image: `http://192.168.1.152:3000/Images/${req.file.filename}`,
+              image: `http://ifm.onrender.com:3000/Images/${req.file.filename}`,
             } as Image);
           }
         } else {

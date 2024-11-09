@@ -17,6 +17,7 @@ const user_1 = require("../Models/user");
 const username_splitter_1 = __importDefault(require("../Config/username.splitter"));
 const sequelize_1 = require("sequelize");
 const randomize_1 = __importDefault(require("../Config/randomize"));
+const email_1 = __importDefault(require("../Config/email"));
 const router = (0, express_1.Router)();
 router.get("/list", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -67,20 +68,49 @@ router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 }
             }
             else {
-                const us = yield user_1.User.findAll({
-                    where: { email: Req.query },
+                const us = yield user_1.User.findOne({
+                    where: {
+                        [sequelize_1.Op.and]: [{ email: Req.query }, { verif: { [sequelize_1.Op.ne]: 0 } }],
+                    },
                 });
-                if (us.length > 0) {
+                if (us) {
                     res.status(200).json(us);
                 }
                 else {
-                    res.status(404).json({ message: "Utilisateur non trouvé" });
+                    const use = yield user_1.User.findOne({
+                        where: {
+                            [sequelize_1.Op.and]: [{ email: Req.query }, { verif: 0 }],
+                        },
+                    });
+                    if (use) {
+                        res.status(500).json({ message: "Veuillez verifier votre email" });
+                    }
+                    else {
+                        res.status(500).json({ message: "Aucun utilisateur correpondant" });
+                    }
                 }
             }
         }
     }
     catch (error) {
         res.status(500).json({ error });
+    }
+}));
+router.get("/confirm/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = parseInt(req.params.id, 10);
+    try {
+        const user = yield user_1.User.findOne({ where: { user_id: userId } });
+        if (user) {
+            user.verif = true;
+            yield user.save();
+            res.status(200).json({ message: "Utilisateur confirmé" });
+        }
+        else {
+            res.status(202).json({ message: "Utilisateur non existant" });
+        }
+    }
+    catch (error) {
+        res.status(500).json(error);
     }
 }));
 router.post("/authByGoogle", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -129,16 +159,23 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
                 res.status(201).json({ message: "Utilisateur crée" });
             }
             else {
-                res.status(201).json({ message: `Utilisateur ${usr} crée` });
+                res.status(202).json({ message: `Utilisateur ${usr} crée` });
             }
         }
         else {
             if (Req.email != null) {
-                yield user_1.User.create({
+                const userCreated = yield user_1.User.create({
                     email: Req.email,
                     mdp: MDP,
                 });
-                res.status(200).json({ message: "Utilisateur créé" });
+                (0, email_1.default)({
+                    destination: Req.email,
+                    subject: "Veuillez confirmer votre email",
+                    text: `http://ifm.onrender.com:3000/api/users/confirm/${userCreated.user_id}`,
+                });
+                res
+                    .status(201)
+                    .send("Bienvenue dans anonymat, votre email a été confirmé");
             }
             else {
                 res.status(202).json({ message: "Champ incomplet" });

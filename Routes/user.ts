@@ -156,7 +156,7 @@ router.post("/create", async (req: Request, res: Response) => {
         sendEmail({
           destination: Req.email as string,
           subject: "Veuillez confirmer votre email",
-          text: `http://192.168.1.152:3000/api/users/confirm/${userCreated.user_id}`,
+          text: `http://ifm.onrender.com:3000/api/users/confirm/${userCreated.user_id}`,
         });
         res
           .status(201)

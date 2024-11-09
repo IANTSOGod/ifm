@@ -12,13 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const notification_1 = require("../Models/notification");
 const sequelize_1 = require("sequelize");
+const publication_1 = require("../Models/publication");
 const router = (0, express_1.Router)();
-router.get("/num/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = parseInt(req.params.id, 10);
+router.post("/num/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const Req = req.body;
+    const userId = Req.user_id;
     try {
         if (userId != null) {
             const notifs = yield notification_1.Notification.findAll({
                 where: { user_id: { [sequelize_1.Op.ne]: userId } },
+                include: {
+                    model: publication_1.Publication,
+                    required: false,
+                    attributes: ["titre"],
+                },
             });
             res.status(200).json({ nombre: notifs.length, notification: notifs });
         }

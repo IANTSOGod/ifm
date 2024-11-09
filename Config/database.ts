@@ -23,7 +23,14 @@ const sequelize = new Sequelize({
   username: "iantso",
   password: "Ds0jZZTcPtDjWsO5urcSBp3mG8oo6MeX",
   dialect: "postgres",
-  host: "postgresql://iantso:Ds0jZZTcPtDjWsO5urcSBp3mG8oo6MeX@dpg-csnimuogph6c73bf9060-a/ifm",
+  port: 5432,
+  dialectOptions: {
+    ssl: {
+      require: true, // Exiger la connexion SSL
+      rejectUnauthorized: false, // Désactiver la vérification de l'autorité de certification (utile si vous n'avez pas de certificat personnalisé)
+    },
+  },
+  host: "dpg-csnimuogph6c73bf9060-a.oregon-postgres.render.com",
   models: [
     User,
     Image,

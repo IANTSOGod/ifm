@@ -60,6 +60,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.BOOLEAN,
+        allowNull: true,
+    }),
+    __metadata("design:type", Boolean)
+], User.prototype, "verif", void 0);
+__decorate([
     (0, sequelize_typescript_1.HasMany)(() => notification_1.Notification),
     __metadata("design:type", notification_1.Notification)
 ], User.prototype, "notification", void 0);

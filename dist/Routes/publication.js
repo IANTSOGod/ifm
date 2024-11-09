@@ -86,16 +86,42 @@ router.get("/list", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).json(error);
     }
 }));
-router.post("/Find/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const factId = parseInt(req.params.id, 10);
+router.post("/Find/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const Req = req.body;
+    const factId = Req.pub_id;
     try {
         const response = yield publication_1.Publication.findOne({
             where: { pub_id: factId },
-            include: {
-                model: user_1.User,
-                required: false,
-                attributes: ["username"],
-            },
+            include: [
+                {
+                    model: user_1.User,
+                    required: false,
+                    attributes: ["username"],
+                },
+                {
+                    model: image_1.Image,
+                    required: false,
+                    attributes: ["image", "image_id"],
+                },
+                {
+                    model: reaction_1.Reaction,
+                    required: false,
+                    attributes: ["type", "user_id"],
+                },
+                {
+                    model: temoignage_1.Temoignage,
+                    required: false,
+                    attributes: ["corps", "date", "user_id"],
+                    include: [
+                        {
+                            model: user_1.User,
+                            as: "user",
+                            required: false,
+                            attributes: ["username"], // Les attributs que vous souhaitez inclure de l'utilisateur
+                        },
+                    ],
+                },
+            ],
         });
         if (response) {
             res.status(200).json(response);
@@ -415,7 +441,7 @@ router.post("/create", upload.single("image"), (req, res) => __awaiter(void 0, v
                 if (req.file != undefined) {
                     yield image_1.Image.create({
                         pub_id: pub.pub_id,
-                        image: `http://192.168.1.152:3000/Images/${req.file.filename}`,
+                        image: `http://ifm.onrender.com:3000/Images/${req.file.filename}`,
                     });
                 }
             }
