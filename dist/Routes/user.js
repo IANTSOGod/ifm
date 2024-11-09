@@ -16,29 +16,12 @@ const express_1 = require("express");
 const user_1 = require("../Models/user");
 const username_splitter_1 = __importDefault(require("../Config/username.splitter"));
 const sequelize_1 = require("sequelize");
+const randomize_1 = __importDefault(require("../Config/randomize"));
 const router = (0, express_1.Router)();
 router.get("/list", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_1.User.findAll();
         res.json(users);
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-}));
-router.get("/findByusr", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const Req = req.body;
-    const searchTerm = Req.search;
-    try {
-        const users = yield user_1.User.findAll({
-            where: { username: { [sequelize_1.Op.like]: `%${searchTerm}%` } },
-        });
-        if (users.length > 0) {
-            res.status(200).json(users);
-        }
-        else {
-            res.status(404).json({ message: "Aucun utilisateur trouvé" });
-        }
     }
     catch (error) {
         res.status(500).json(error);
@@ -65,29 +48,66 @@ router.post("/search", (req, res) => __awaiter(void 0, void 0, void 0, function*
 router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const Req = req.body;
     try {
-        const users = yield user_1.User.findAll({
-            where: { username: Req.username },
-        });
-        if (users.length > 0) {
-            const usersWithValidPassword = users.filter((user) => user.mdp === Req.mdp);
-            if (usersWithValidPassword.length === 1) {
-                res.status(200).json(usersWithValidPassword[0]);
-            }
-            else if (usersWithValidPassword.length > 1) {
-                res.status(409).json({
-                    message: "Plusieurs utilisateurs avec le même mot de passe trouvés",
-                });
+        if (Req.query != null) {
+            const users = yield user_1.User.findAll({
+                where: { username: Req.query },
+            });
+            if (users.length > 0) {
+                const usersWithValidPassword = users.filter((user) => user.mdp === Req.mdp);
+                if (usersWithValidPassword.length === 1) {
+                    res.status(200).json(usersWithValidPassword[0]);
+                }
+                else if (usersWithValidPassword.length > 1) {
+                    res.status(202).json({
+                        message: "Plusieurs utilisateurs avec le même mot de passe trouvés",
+                    });
+                }
+                else {
+                    res.status(401).json({ message: "Mot de passe incorrect" });
+                }
             }
             else {
-                res.status(401).json({ message: "Mot de passe incorrect" });
+                const us = yield user_1.User.findAll({
+                    where: { email: Req.query },
+                });
+                if (us.length > 0) {
+                    res.status(200).json(us);
+                }
+                else {
+                    res.status(404).json({ message: "Utilisateur non trouvé" });
+                }
             }
-        }
-        else {
-            res.status(404).json({ message: "Utilisateur non trouvé" });
         }
     }
     catch (error) {
         res.status(500).json({ error });
+    }
+}));
+router.post("/authByGoogle", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const Req = req.body;
+    try {
+        if (Req.email != null) {
+            const user = yield user_1.User.findOne({
+                where: {
+                    email: Req.email,
+                },
+            });
+            if (user) {
+                res.status(200).json(user);
+            }
+            else {
+                const str = (0, randomize_1.default)(8);
+                const usr = yield user_1.User.create({
+                    email: Req.email,
+                    mdp: str,
+                    username: Req.name,
+                });
+                res.status(200).json(usr);
+            }
+        }
+    }
+    catch (error) {
+        res.status(500).json(error);
     }
 }));
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -113,9 +133,16 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
             }
         }
         else {
-            res
-                .status(400)
-                .json({ message: "Nom d'utilisateur et mot de passe sont requis." });
+            if (Req.email != null) {
+                yield user_1.User.create({
+                    email: Req.email,
+                    mdp: MDP,
+                });
+                res.status(200).json({ message: "Utilisateur créé" });
+            }
+            else {
+                res.status(202).json({ message: "Champ incomplet" });
+            }
         }
     }
     catch (error) {

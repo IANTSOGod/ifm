@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const notification_1 = require("./notification");
+const lecture_1 = require("./lecture");
 let User = class User extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -25,8 +27,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(30),
-        allowNull: false,
-        unique: true
+        allowNull: true,
     }),
     __metadata("design:type", String)
 ], User.prototype, "username", void 0);
@@ -58,6 +59,14 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => notification_1.Notification),
+    __metadata("design:type", notification_1.Notification)
+], User.prototype, "notification", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => lecture_1.Lecture),
+    __metadata("design:type", lecture_1.Lecture)
+], User.prototype, "lecture", void 0);
 User = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "user",

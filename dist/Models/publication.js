@@ -12,6 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Publication = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const user_1 = require("./user");
+const image_1 = require("./image");
+const reaction_1 = require("./reaction");
+const temoignage_1 = require("./temoignage");
+const notification_1 = require("./notification");
 let Publication = class Publication extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -47,8 +51,15 @@ __decorate([
 ], Publication.prototype, "description", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Publication.prototype, "entreprise", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.DATE,
-        allowNull: false,
+        allowNull: true,
     }),
     __metadata("design:type", Date)
 ], Publication.prototype, "date", void 0);
@@ -63,6 +74,22 @@ __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => user_1.User),
     __metadata("design:type", user_1.User)
 ], Publication.prototype, "user", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => image_1.Image),
+    __metadata("design:type", Array)
+], Publication.prototype, "images", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => reaction_1.Reaction),
+    __metadata("design:type", reaction_1.Reaction)
+], Publication.prototype, "reaction", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => temoignage_1.Temoignage),
+    __metadata("design:type", temoignage_1.Temoignage)
+], Publication.prototype, "temoignage", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasOne)(() => notification_1.Notification),
+    __metadata("design:type", notification_1.Notification)
+], Publication.prototype, "notification", void 0);
 Publication = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "publication",

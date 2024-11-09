@@ -9,10 +9,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Image = void 0;
+exports.Notification = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const user_1 = require("./user");
 const publication_1 = require("./publication");
-let Image = class Image extends sequelize_typescript_1.Model {
+const lecture_1 = require("./lecture");
+let Notification = class Notification extends sequelize_typescript_1.Model {
 };
 __decorate([
     (0, sequelize_typescript_1.Column)({
@@ -22,14 +24,15 @@ __decorate([
         allowNull: false,
     }),
     __metadata("design:type", Number)
-], Image.prototype, "image_id", void 0);
+], Notification.prototype, "notif_id", void 0);
 __decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => user_1.User),
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING(255),
+        type: sequelize_typescript_1.DataType.NUMBER,
         allowNull: false,
     }),
-    __metadata("design:type", String)
-], Image.prototype, "image", void 0);
+    __metadata("design:type", Number)
+], Notification.prototype, "user_id", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => publication_1.Publication),
     (0, sequelize_typescript_1.Column)({
@@ -37,15 +40,23 @@ __decorate([
         allowNull: false,
     }),
     __metadata("design:type", Number)
-], Image.prototype, "pub_id", void 0);
+], Notification.prototype, "pub_id", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => user_1.User),
+    __metadata("design:type", user_1.User)
+], Notification.prototype, "user", void 0);
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => publication_1.Publication),
     __metadata("design:type", publication_1.Publication)
-], Image.prototype, "publication", void 0);
-Image = __decorate([
+], Notification.prototype, "pub", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => lecture_1.Lecture),
+    __metadata("design:type", lecture_1.Lecture)
+], Notification.prototype, "lecture", void 0);
+Notification = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: "image",
+        tableName: "notification",
         timestamps: false,
     })
-], Image);
-exports.Image = Image;
+], Notification);
+exports.Notification = Notification;
