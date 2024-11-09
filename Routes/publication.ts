@@ -7,7 +7,24 @@ import { Reaction } from "../Models/reaction";
 import { Temoignage } from "../Models/temoignage";
 import { Notification } from "../Models/notification";
 import { Lecture } from "../Models/lecture";
+import path from "path";
+import multer from "multer";
+
 const router = Router();
+
+const storage = multer.diskStorage({
+  destination: (req: Request, file, cb) => {
+    cb(null, path.join(__dirname, "../Images")); // Chemin relatif au projet
+  },
+  filename: (req, file, cb) => {
+    const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+    const fileExtension = path.extname(file.originalname);
+    const newFileName = `image_${timestamp}${fileExtension}`;
+    cb(null, newFileName);
+  },
+});
+
+const upload = multer({ storage });
 
 router.get("/list", async (req: Request, res: Response) => {
   try {
@@ -360,48 +377,60 @@ router.delete("/delete/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/create", async (req: Request, res: Response) => {
-  const Req = req.body;
-  try {
-    if (
-      Req.titre != null &&
-      Req.description != null &&
-      Req.zone != null &&
-      Req.user_id != null
-    ) {
-      if (Req.entreprise != null) {
-        const pub = await Publication.create({
-          titre: Req.titre,
-          user_id: Req.user_id,
-          description: Req.description,
-          zone: Req.zone,
-          entreprise: Req.entreprise,
-        } as Publication);
+router.post(
+  "/create",
+  upload.single("image"),
+  async (req: Request, res: Response): Promise<void> => {
+    const Req = req.body;
+    try {
+      if (
+        Req.zone != null &&
+        Req.description != null &&
+        Req.titre != null &&
+        Req.user_id
+      ) {
+        if (Req.entreprise != null) {
+          const pub = await Publication.create({
+            user_id: Req.user_id,
+            zone: Req.zone,
+            description: Req.description,
+            titre: Req.titre,
+            entreprise: Req.entreprise,
+          } as Publication);
 
-        await Notification.create({
-          pub_id: pub.pub_id,
-          user_id: pub.user_id,
-        } as Notification);
+          await Notification.create({
+            pub_id: pub.pub_id,
+            user_id: pub.user_id,
+          } as Notification);
+
+          if (!req.file) {
+          }
+          if (req.file != undefined) {
+            await Image.create({
+              pub_id: pub.pub_id,
+              image: `http://192.168.1.152:3000/Images/${req.file.filename}`,
+            } as Image);
+          }
+        } else {
+          const pub = await Publication.create({
+            user_id: Req.user_id,
+            zone: Req.zone,
+            description: Req.description,
+            titre: Req.titre,
+          } as Publication);
+          await Notification.create({
+            pub_id: pub.pub_id,
+            user_id: pub.user_id,
+          } as Notification);
+        }
+        res.status(200).json({ message: "Publication créé" });
       } else {
-        const pub = await Publication.create({
-          titre: Req.titre,
-          user_id: Req.user_id,
-          description: Req.description,
-          zone: Req.zone,
-        } as Publication);
-
-        await Notification.create({
-          pub_id: pub.pub_id,
-          user_id: pub.user_id,
-        } as Notification);
+        res.status(202).json("Champ vide impossible de creer");
       }
-      res.status(200).json({ message: "Fait créé" });
-    } else {
-      res.status(202).json({ message: "Champ vide impossible de creer" });
+    } catch (error) {
+      res.status(500).json(error);
     }
-  } catch (error) {
-    res.status(500).json(error);
   }
-});
+);
 
 export default router;

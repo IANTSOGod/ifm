@@ -120,9 +120,15 @@ router.post("/create", async (req: Request, res: Response) => {
         res.status(201).json({ message: `Utilisateur ${usr} crée` });
       }
     } else {
-      res
-        .status(400)
-        .json({ message: "Nom d'utilisateur et mot de passe sont requis." });
+      if (Req.email != null) {
+        await User.create({
+          email: Req.email,
+          mdp: MDP,
+        } as User);
+        res.status(200).json({ message: "Utilisateur créé" });
+      } else {
+        res.status(202).json({ message: "Champ incomplet" });
+      }
     }
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur:", error);

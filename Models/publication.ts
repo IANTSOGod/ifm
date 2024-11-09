@@ -48,7 +48,7 @@ export class Publication extends Model<Publication> {
 
   @Column({
     type: DataType.STRING(50),
-    allowNull: false,
+    allowNull: true,
   })
   entreprise?: string;
 
