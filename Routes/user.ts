@@ -59,7 +59,7 @@ router.post("/auth", async (req: Request, res: Response) => {
       } else {
         const us = await User.findOne({
           where: {
-            [Op.and]: [{ email: Req.query }, { verif: { [Op.ne]: 0 } }],
+            [Op.and]: [{ email: Req.query }, { verif: { [Op.ne]: 1 } }],
           },
         });
         if (us) {
@@ -156,7 +156,7 @@ router.post("/create", async (req: Request, res: Response) => {
         sendEmail({
           destination: Req.email as string,
           subject: "Veuillez confirmer votre email",
-          text: `http://ifm.onrender.com:3000/api/users/confirm/${userCreated.user_id}`,
+          text: `http://localhost:3000/api/users/confirm/${userCreated.user_id}`,
         });
         res
           .status(201)

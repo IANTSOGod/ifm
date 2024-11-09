@@ -52,9 +52,9 @@ router.get("/list", async (req: Request, res: Response) => {
           include: [
             {
               model: User,
-              as: "user", // Assurez-vous que l'alias est correctement configuré dans le modèle Temoignage
+              as: "user",
               required: false,
-              attributes: ["username"], // Les attributs que vous souhaitez inclure de l'utilisateur
+              attributes: ["username"],
             },
           ],
         },
@@ -361,42 +361,17 @@ router.post("/search", async (req: Request, res: Response) => {
 router.delete("/delete/:id", async (req: Request, res: Response) => {
   const pubId = parseInt(req.params.id, 10);
   try {
-    await Image.destroy({
+    const Notifs = await Notification.findOne({
       where: { pub_id: pubId },
     });
-    await Reaction.destroy({
-      where: { pub_id: pubId },
-    });
-    await Temoignage.destroy({
-      where: { pub_id: pubId },
-    });
-    var notifToSuppr = [] as number[];
-    const Notifs = await Notification.findAll({
-      where: { pub_id: pubId },
-    });
-    Notifs.map((notif) => {
-      notifToSuppr.push(notif.pub_id);
-    });
-
-    notifToSuppr.map(async (notif) => {
-      await Lecture.destroy({
-        where: { notif_id: notif },
-      });
-      await Notification.destroy({
-        where: {
-          notif_id: notif,
-        },
-      });
-    });
-
-    const destroyCount = await Publication.destroy({
-      where: { pub_id: pubId },
-    });
-
-    if (destroyCount > 0) {
-      res.status(200).json({ message: "La publication a été supprimé" });
-    } else {
-      res.status(404).json({ message: "Cette publication n'existe pas" });
+    await Lecture.destroy({ where: { notif_id: Notifs?.notif_id } });
+    Notifs?.destroy();
+    await Image.destroy({ where: { pub_id: pubId } });
+    await Reaction.destroy({ where: { pub_id: pubId } });
+    await Temoignage.destroy({ where: { pub_id: pubId } });
+    const result = await Publication.destroy({ where: { pub_id: pubId } });
+    if (result > 0) {
+      res.status(200).json({ message: "supprimé" });
     }
   } catch (error) {
     res.status(500).json(error);
@@ -434,7 +409,7 @@ router.post(
           if (req.file != undefined) {
             await Image.create({
               pub_id: pub.pub_id,
-              image: `https://ifm.onrender.com:3000/Images/${req.file.filename}`,
+              image: `https://192.168.1.152:3000/Images/${req.file.filename}`,
             } as Image);
           }
         } else {
