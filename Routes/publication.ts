@@ -26,6 +26,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+router.get("/andrana",async (req: Request,res: Response)=>{
+  res.send("Hackaton");
+})
+
 router.get("/list", async (req: Request, res: Response) => {
   try {
     var response = await Publication.findAll({
