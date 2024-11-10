@@ -23,12 +23,12 @@ const sequelize = new Sequelize({
   username: "db_ifm_user",
   password: "i4mqGoWnGoievyun7gBMHcLZESzVJlIc",
   dialect: "postgres",
-  host: "postgresql://db_ifm_user:i4mqGoWnGoievyun7gBMHcLZESzVJlIc@dpg-cso4ll2j1k6c73bbpq60-a/db_ifm.oregon-postgres.render.com",
+  host: "dpg-cso4ll2j1k6c73bbpq60-a.oregon-postgres.render.com",
   port: 5432,
   dialectOptions: {
     ssl: {
       require: true,  // Active SSL
-      rejectUnauthorized: false,  // Vérifie si le certificat est valide (utilisez true si vous avez un certificat valide)
+      rejectUnauthorized: false,  // Vérifie si le certificat est valide
       minVersion: 'TLSv1.2',  // Force TLS 1.2
     },
   },
