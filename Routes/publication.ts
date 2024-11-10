@@ -412,7 +412,7 @@ router.post(
           if (req.file != undefined) {
             await Image.create({
               pub_id: pub.pub_id,
-              image: `https://ifm.onrender.com:3000/Images/${req.file.filename}`,
+              image: `https://ifm-2l46.onrender.com/Images/${req.file.filename}`,
             } as Image);
           }
         } else {
