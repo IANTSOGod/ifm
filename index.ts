@@ -24,7 +24,7 @@ app.use(
     allowedHeaders: ["Content-Type"],
   })
 );
-app.get("/",(req,res)=>{
+app.get("/andrana",(req,res)=>{
   res.send("Hackaton");
 })
 app.use("/api/users", UserRoutes);
