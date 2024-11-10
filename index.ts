@@ -24,6 +24,9 @@ app.use(
     allowedHeaders: ["Content-Type"],
   })
 );
+app.get("/",(req,res)=>{
+  res.send("Hackaton");
+})
 app.use("/api/users", UserRoutes);
 app.use("/api/email", MailRoutes);
 app.use("/api/pub", PubRoutes);

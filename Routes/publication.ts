@@ -408,7 +408,7 @@ router.post(
           if (req.file != undefined) {
             await Image.create({
               pub_id: pub.pub_id,
-              image: `http://192.168.43.41:3000/Images/${req.file.filename}`,
+              image: `https://ifm.onrender.com:3000/Images/${req.file.filename}`,
             } as Image);
           }
         } else {
