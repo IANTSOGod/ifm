@@ -19,18 +19,19 @@ const lecture_1 = require("../Models/lecture");
 }
 */
 const sequelize = new sequelize_typescript_1.Sequelize({
-    database: "ifm",
-    username: "iantso",
-    password: "Ds0jZZTcPtDjWsO5urcSBp3mG8oo6MeX",
+    database: "db_ifm",
+    username: "db_ifm_user",
+    password: "i4mqGoWnGoievyun7gBMHcLZESzVJlIc",
     dialect: "postgres",
+    host: "dpg-cso4ll2j1k6c73bbpq60-a.oregon-postgres.render.com",
     port: 5432,
     dialectOptions: {
         ssl: {
             require: true,
-            rejectUnauthorized: false, // Désactiver la vérification de l'autorité de certification (utile si vous n'avez pas de certificat personnalisé)
+            rejectUnauthorized: false,
+            minVersion: 'TLSv1.2', // Force TLS 1.2
         },
     },
-    host: "dpg-csnimuogph6c73bf9060-a.oregon-postgres.render.com",
     models: [
         user_1.User,
         image_1.Image,
