@@ -35,6 +35,7 @@ router.post("/search", async (req: Request, res: Response) => {
 
 router.post("/auth", async (req: Request, res: Response) => {
   const Req = req.body;
+  //console.log(Req);
 
   try {
     if (Req.query != null) {
@@ -59,7 +60,7 @@ router.post("/auth", async (req: Request, res: Response) => {
       } else {
         const us = await User.findOne({
           where: {
-            [Op.and]: [{ email: Req.query }, { verif: { [Op.ne]: 1 } }],
+            [Op.and]: [{ email: Req.query }],
           },
         });
         if (us) {
@@ -67,7 +68,7 @@ router.post("/auth", async (req: Request, res: Response) => {
         } else {
           const use = await User.findOne({
             where: {
-              [Op.and]: [{ email: Req.query }, { verif: 0 }],
+              [Op.and]: [{ email: Req.query }],
             },
           });
           if (use) {

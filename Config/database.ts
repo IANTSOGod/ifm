@@ -19,11 +19,19 @@ import { Lecture } from "../Models/lecture";
 */
 
 const sequelize = new Sequelize({
-  database: "ifm",
-  username: "nouvel_utilisateur",
-  password: "mot_de_passe",
-  dialect: "mysql",
-  host: "localhost",
+  database: "db_ifm",
+  username: "db_ifm_user",
+  password: "i4mqGoWnGoievyun7gBMHcLZESzVJlIc",
+  dialect: "postgres",
+  host: "dpg-cso4ll2j1k6c73bbpq60-a.oregon-postgres.render.com",
+  port: 5432,
+  dialectOptions: {
+    ssl: {
+      require: true,  // Active SSL
+      rejectUnauthorized: false,  // Vérifie si le certificat est valide (utilisez true si vous avez un certificat valide)
+      minVersion: 'TLSv1.2',  // Force TLS 1.2
+    },
+  },
   models: [
     User,
     Image,
